@@ -14,6 +14,14 @@ use Symfony\Component\Uid\Uuid;
 
 class PingController extends AbstractController
 {
+    #[Route('/console', name: 'app_console')]
+    public function console(): Response
+    {
+        return $this->render('ping/index.html.twig', [
+            'controller_name' => 'PingController',
+        ]);
+    }
+
     #[Route('/ping', name: 'app_ping')]
     public function index(MessageBusInterface $bus): Response
     {
@@ -38,7 +46,7 @@ class PingController extends AbstractController
     #[Route('/push', name: 'app_push')]
     public function publish(HubInterface $hub): Response
     {
-        $process = new Process(['ping', 'heise.de','-c', '10']);
+        $process = new Process(['composer','update']);
         $process->start();
         $process->wait(function ($type, $buffer) use ($hub) {
 
@@ -97,7 +105,7 @@ class PingController extends AbstractController
     {
         $command = new ShellCommand(
             Uuid::v4(),
-            ['ls', '-la','--color=always']
+            ['test/test.sh']
         );
 
         $bus->dispatch($command);
